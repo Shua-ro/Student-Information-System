@@ -10,14 +10,25 @@ if (isset($_POST['save'])) {
     $course = $_POST['course'];
     $year = $_POST['year'];
 
-    mysqli_query($conn, "INSERT INTO students (student_id, first_name, last_name, email, course, year_level) 
+    mysqli_query($conn, "INSERT INTO students (student_id, first_name, last_name, email, course, year_level)
                          VALUES ('$student_id', '$first_name', '$last_name', '$email', '$course', '$year')");
     header("Location: index.php?status=success");
     exit();
 }
 
-// Get all students from the database, newest first
-$result = mysqli_query($conn, "SELECT * FROM students ORDER BY id DESC");
+// Pagination setup
+$limit = 5;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+// Get total number of records
+$total_result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM students");
+$total_row = mysqli_fetch_assoc($total_result);
+$total_records = $total_row['total'];
+$total_pages = ceil($total_records / $limit);
+
+// Get records for current page, newest first
+$result = mysqli_query($conn, "SELECT * FROM students ORDER BY id DESC LIMIT $limit OFFSET $offset");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,11 +54,11 @@ $result = mysqli_query($conn, "SELECT * FROM students ORDER BY id DESC");
             <input type="email" name="email" placeholder="Email Address" required>
             <select name="course" required>
                 <option value="" disabled selected>Select Course</option>
-                <option value="BSCS">BSCS</option>
+                <option value="DCPET">DCPET</option>
                 <option value="BSIT">BSIT</option>
                 <option value="BSCE">BSCE</option>
-                <option value="BSEE">BSEE</option>
-                <option value="BSME">BSME</option>
+                <option value="DCET">DCET</option>
+                <option value="DIT">DIT</option>
             </select>
             <select name="year" required>
                 <option value="" disabled selected>Select Year Level</option>
@@ -55,7 +66,7 @@ $result = mysqli_query($conn, "SELECT * FROM students ORDER BY id DESC");
                 <option value="2nd Year">2nd Year</option>
                 <option value="3rd Year">3rd Year</option>
             </select>
-            <button type="submit" name="save" class="btn-save">Execute Save</button>
+            <button type="submit" name="save" class="btn-save">Save</button>
         </form>
     </div>
 
@@ -87,6 +98,26 @@ $result = mysqli_query($conn, "SELECT * FROM students ORDER BY id DESC");
             <?php endwhile; ?>
         </tbody>
     </table>
+
+    <?php if ($total_pages > 1): ?>
+        <div class="pagination">
+            <?php if ($page > 1): ?>
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page=<?php echo $page - 1; ?>">&lsaquo; Prev</a>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="?page=<?php echo $i; ?>" class="<?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+            <?php endfor; ?>
+
+            <?php if ($page < $total_pages): ?>
+                <a href="?page=<?php echo $page + 1; ?>">Next &rsaquo;</a>
+                <a href="?page=<?php echo $total_pages; ?>">Last &raquo;</a>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <p class="record-count">Showing <?php echo min($limit, $total_records - $offset); ?> of <?php echo $total_records; ?> records</p>
 
 </body>
 

@@ -12,11 +12,11 @@ if (!$row) {
 
 // Update the student's info when the form is submitted
 if (isset($_POST['update'])) {
-    $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
-    $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $course = mysqli_real_escape_string($conn, $_POST['course']);
-    $year = mysqli_real_escape_string($conn, $_POST['year']);
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $email = $_POST['email'];
+    $course = $_POST['course'];
+    $year = $_POST['year'];
 
     mysqli_query($conn, "UPDATE students SET first_name='$first_name', last_name='$last_name', email='$email', course='$course', year_level='$year' WHERE id=$id");
     header("Location: index.php?status=success");
@@ -43,11 +43,11 @@ if (isset($_POST['update'])) {
             <input type="email" name="email" value="<?php echo $row['email']; ?>" placeholder="Email" required>
             <select name="course" required>
                 <option value="" disabled>Select Course</option>
-                <option value="BSCS" <?php if ($row['course'] == 'BSCS') echo 'selected'; ?>>BSCS</option>
+                <option value="DCPET" <?php if ($row['course'] == 'DCPET') echo 'selected'; ?>>DCPET</option>
                 <option value="BSIT" <?php if ($row['course'] == 'BSIT') echo 'selected'; ?>>BSIT</option>
                 <option value="BSCE" <?php if ($row['course'] == 'BSCE') echo 'selected'; ?>>BSCE</option>
-                <option value="BSEE" <?php if ($row['course'] == 'BSEE') echo 'selected'; ?>>BSEE</option>
-                <option value="BSME" <?php if ($row['course'] == 'BSME') echo 'selected'; ?>>BSME</option>
+                <option value="DCET" <?php if ($row['course'] == 'DCET') echo 'selected'; ?>>DCET</option>
+                <option value="DIT" <?php if ($row['course'] == 'DIT') echo 'selected'; ?>>DIT</option>
             </select>
 
             <select name="year" required>
