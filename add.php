@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+</head>
+
+<body class="form-page">
+    <div class="form-container">
+        <h3>Add New Student Record</h3>
+        <form method="POST" action="index.php">
+            <input type="text" name="student_id" placeholder="Student ID (e.g., 2024-00001)" required>
+            <input type="text" name="first_name" placeholder="First Name" required>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <select name="course" required>
+                <option value="" disabled selected>Select Course</option>
+                <option value="DCPET">DCPET</option>
+                <option value="BSIT">BSIT</option>
+                <option value="BSCE">BSCE</option>
+                <option value="DCET">DCET</option>
+                <option value="DIT">DIT</option>
+            </select>
+            <select name="section" required>
+                <option value="" disabled selected>Select Section</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+            <select name="year" required>
+                <option value="" disabled selected>Select Year Level</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+            </select>
+            <div class="formbtns">
+                <button type="submit" name="save" class="default-btn">Save</button>
+                <button onclick="window.location.href='index.php'" class="default-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

@@ -16,6 +16,12 @@ body {
   padding: 40px;
 }
 
+body.form-page {
+  height: 100vh;
+  justify-content: center;
+  padding: 0;
+}
+
 h3 {
   color: var(--primary);
   border-bottom: 2px solid var(--light);
@@ -28,6 +34,7 @@ h3 {
   display: flex;
   flex-direction: column;
   align-self: center;
+  justify-content: center;
   background: var(--light);
   padding: 24px;
   border-radius: 8px;
@@ -53,9 +60,9 @@ select {
   box-sizing: border-box;
 }
 
-/* Save Button */
 
-.btn-save {
+/* Default Button Styles */
+.default-btn {
   background-color: var(--primary);
   color: #ffffff;
   padding: 12px 20px;
@@ -65,6 +72,7 @@ select {
   font-weight: bold;
   width: 100%;
 }
+
 
 .btn-save:hover {
   background-color: var(--secondary);
@@ -164,4 +172,18 @@ tr:hover {
   margin: 0 auto 20px;
   max-width: 500px;
   text-align: center;
+}
+
+.formbtns {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Add/Refresh Buttons */
+.add-refresh {
+  display: flex;
+  gap: 10px;
+  width:35%;
+  margin-bottom: 20px;
 }
