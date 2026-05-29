@@ -18,9 +18,10 @@ if (isset($_POST['update'])) {
     $last_name = $_POST['last_name'];
     $email = $_POST['email'];
     $course = $_POST['course'];
+    $section = $_POST['section'];
     $year = $_POST['year'];
 
-    mysqli_query($conn, "UPDATE students SET student_id='$student_id', first_name='$first_name', last_name='$last_name', email='$email', course='$course', year_level='$year' WHERE id=$id");
+    mysqli_query($conn, "UPDATE students SET student_id='$student_id', first_name='$first_name', last_name='$last_name', email='$email', course='$course', section='$section', year_level='$year' WHERE id=$id");
     header("Location: index.php?status=success");
     exit();
 }
@@ -47,25 +48,10 @@ if (isset($_POST['update'])) {
             <input type="text" name="last_name" value="<?php echo $row['last_name']; ?>" placeholder="Last Name"
                 required>
             <input type="email" name="email" value="<?php echo $row['email']; ?>" placeholder="Email" required>
-            <select name="course" required>
-                <option value="" disabled>Select Course</option>
-                <option value="DCPET" <?php if ($row['course'] == 'DCPET')
-                    echo 'selected'; ?>>DCPET</option>
-                <option value="BSIT" <?php if ($row['course'] == 'BSIT')
-                    echo 'selected'; ?>>BSIT</option>
-                <option value="BSCE" <?php if ($row['course'] == 'BSCE')
-                    echo 'selected'; ?>>BSCE</option>
-                <option value="DCET" <?php if ($row['course'] == 'DCET')
-                    echo 'selected'; ?>>DCET</option>
-                <option value="DIT" <?php if ($row['course'] == 'DIT')
-                    echo 'selected'; ?>>DIT</option>
-            </select>
-            <select name="section" required>
-                <option value="" disabled selected>Select Section</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-            </select>
+            <input type="text" name="course" value="<?php echo $row['course']; ?>"
+                placeholder="Course (e.g., BSMT, BSHM)" required>
+            <input type="text" name="section" value="<?php echo $row['section']; ?>"
+                placeholder="Section (e.g., MTJ2-B2)" required>
             <select name="year" required>
                 <option value="1st Year" <?php if ($row['year_level'] == '1st Year')
                     echo 'selected'; ?>>1st Year</option>
@@ -73,9 +59,15 @@ if (isset($_POST['update'])) {
                     echo 'selected'; ?>>2nd Year</option>
                 <option value="3rd Year" <?php if ($row['year_level'] == '3rd Year')
                     echo 'selected'; ?>>3rd Year</option>
+                <option value="4th Year" <?php if ($row['year_level'] == '4th Year')
+                    echo 'selected'; ?>>4th Year</option>
+                <option value="5th Year" <?php if ($row['year_level'] == '5th Year')
+                    echo 'selected'; ?>>5th Year</option>
             </select>
-
-            <button name="update" class="btn-save">Update</button>
+            <div class="formbtns">
+                <button name="update" class="default-btn">Update</button>
+                <button type="button" onclick="window.location.href='index.php'" class="default-btn">Cancel</button>
+            </div>
         </form>
     </div>
 

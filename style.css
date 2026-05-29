@@ -165,6 +165,10 @@ tr:hover {
 /* Success Message */
 
 .alert-status {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: var(--accent);
   padding: 12px;
   border-radius: 6px;
@@ -180,10 +184,26 @@ tr:hover {
   margin-top: 8px;
 }
 
+.filter-select {
+  padding: 12px 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: inherit;
+  background: #fff;
+  cursor: pointer;
+  width: auto;
+  margin: 0;
+}
+
 /* Add/Refresh Buttons */
 .add-refresh {
   display: flex;
   gap: 10px;
   width:35%;
   margin-bottom: 20px;
+}
+
+.add-refresh .default-btn {
+  width: auto;
 }

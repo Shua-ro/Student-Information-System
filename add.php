@@ -16,29 +16,19 @@
             <input type="text" name="first_name" placeholder="First Name" required>
             <input type="text" name="last_name" placeholder="Last Name" required>
             <input type="email" name="email" placeholder="Email Address" required>
-            <select name="course" required>
-                <option value="" disabled selected>Select Course</option>
-                <option value="DCPET">DCPET</option>
-                <option value="BSIT">BSIT</option>
-                <option value="BSCE">BSCE</option>
-                <option value="DCET">DCET</option>
-                <option value="DIT">DIT</option>
-            </select>
-            <select name="section" required>
-                <option value="" disabled selected>Select Section</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-            </select>
+            <input type="text" name="course" placeholder="Course (e.g., BSMT, BSHM)" required>
+            <input type="text" name="section" placeholder="Section (e.g., MTJ2-B2)" required>
             <select name="year" required>
                 <option value="" disabled selected>Select Year Level</option>
                 <option value="1st Year">1st Year</option>
                 <option value="2nd Year">2nd Year</option>
                 <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="5th Year">5th Year</option>
             </select>
             <div class="formbtns">
                 <button type="submit" name="save" class="default-btn">Save</button>
-                <button onclick="window.location.href='index.php'" class="default-btn">Cancel</button>
+                <button type="button" onclick="window.location.href='index.php'" class="default-btn">Cancel</button>
             </div>
         </form>
     </div>

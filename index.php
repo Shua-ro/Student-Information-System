@@ -25,14 +25,22 @@ $limit = 5;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
+// Section filter
+$section_filter = isset($_GET['section']) && $_GET['section'] !== '' ? mysqli_real_escape_string($conn, $_GET['section']) : '';
+$where_clause = $section_filter ? "WHERE section = '$section_filter'" : '';
+$section_param = $section_filter ? "&section=$section_filter" : '';
+
 // Get total number of records
-$total_result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM students");
+$total_result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM students $where_clause");
 $total_row = mysqli_fetch_assoc($total_result);
 $total_records = $total_row['total'];
 $total_pages = ceil($total_records / $limit);
 
 // Get records for current page, newest first
-$result = mysqli_query($conn, "SELECT * FROM students ORDER BY id DESC LIMIT $limit OFFSET $offset");
+$result = mysqli_query($conn, "SELECT * FROM students $where_clause ORDER BY id DESC LIMIT $limit OFFSET $offset");
+
+// Get distinct sections for filter dropdown
+$sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students ORDER BY section");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,6 +49,7 @@ $result = mysqli_query($conn, "SELECT * FROM students ORDER BY id DESC LIMIT $li
     <meta charset="UTF-8">
     <title>SIS Engine Management</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 
 
@@ -54,7 +63,12 @@ $result = mysqli_query($conn, "SELECT * FROM students ORDER BY id DESC LIMIT $li
     
     <div class="add-refresh">
         <button onclick="window.location.href='add.php'" class="default-btn">Add Student</button>
-        <button onclick="window.location.href='index.php'" class="default-btn">Refresh</button>
+        <select class="filter-select" onchange="location.href='?section='+this.value">
+            <option value="">All Sections</option>
+            <?php while ($s = mysqli_fetch_assoc($sections_result)): ?>
+                <option value="<?php echo $s['section']; ?>" <?php echo $section_filter === $s['section'] ? 'selected' : ''; ?>><?php echo $s['section']; ?></option>
+            <?php endwhile; ?>
+        </select>
     </div>    
     <h3>Students</h3>
     <table>
@@ -93,17 +107,17 @@ $result = mysqli_query($conn, "SELECT * FROM students ORDER BY id DESC LIMIT $li
     <?php if ($total_pages > 1): ?>
         <div class="pagination">
             <?php if ($page > 1): ?>
-                <a href="?page=1">&laquo; First</a>
-                <a href="?page=<?php echo $page - 1; ?>">&lsaquo; Prev</a>
+                <a href="?page=1<?php echo $section_param; ?>">&laquo; First</a>
+                <a href="?page=<?php echo $page - 1; ?><?php echo $section_param; ?>">&lsaquo; Prev</a>
             <?php endif; ?>
 
             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?page=<?php echo $i; ?>" class="<?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                <a href="?page=<?php echo $i; ?><?php echo $section_param; ?>" class="<?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
             <?php endfor; ?>
 
             <?php if ($page < $total_pages): ?>
-                <a href="?page=<?php echo $page + 1; ?>">Next &rsaquo;</a>
-                <a href="?page=<?php echo $total_pages; ?>">Last &raquo;</a>
+                <a href="?page=<?php echo $page + 1; ?><?php echo $section_param; ?>">Next &rsaquo;</a>
+                <a href="?page=<?php echo $total_pages; ?><?php echo $section_param; ?>">Last &raquo;</a>
             <?php endif; ?>
         </div>
     <?php endif; ?>
