@@ -95,3 +95,12 @@ INSERT INTO students (student_id, first_name, last_name, email, course, year_lev
 ('202530903', 'Charlie Kate Operana', 'TOBI', 'charlie.tobi@student.pupu.edu.ph', 'BSHM', 'First Year', 'Section 1', 'Active'),
 ('202530950', 'Joaquin Angelo Vargas', 'SONEJA', 'joaquin.soneja@student.pupu.edu.ph', 'BSHM', 'First Year', 'Section 1', 'Active'),
 ('202530961', 'Edelhey Niña Quinlog', 'SISON', 'edelhey.sison@student.pupu.edu.ph', 'BSHM', 'First Year', 'Section 1', 'Active');
+
+CREATE TABLE IF NOT EXISTS admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL, 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+INSERT INTO admins (username, password) 
+VALUES ('admin', 'admin');

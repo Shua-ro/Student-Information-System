@@ -17,32 +17,40 @@ if (isset($_POST['btn_login'])) {
         exit();
     }
 
-    $sql = "SELECT * FROM users WHERE username = '$username'";
+    $sql = "SELECT * FROM admins WHERE username = '$username'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) === 1) {
         $user = mysqli_fetch_assoc($result);
         // Verify user input password against database-encrypted hash
-        if (password_verify($password, $user['password'])) {
+        if ($password === $user['password']) {
             $_SESSION['authenticated'] = true;
             $_SESSION['username'] = $user['username'];
             header("Location: index.php");
             exit();
         }
     }
+
     header("Location: login.php?err=invalid");
     exit();
+
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>SIS Admin Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             display: flex;
@@ -65,18 +73,25 @@ if (isset($_POST['btn_login'])) {
             position: relative;
             overflow: hidden;
         }
+
         .left-panel .circle {
             position: absolute;
             border-radius: 50%;
-            border: 25px solid rgba(255,255,255,0.1);
+            border: 25px solid rgba(255, 255, 255, 0.1);
         }
+
         .left-panel .circle-1 {
-            width: 300px; height: 300px;
-            top: -80px; left: -80px;
+            width: 300px;
+            height: 300px;
+            top: -80px;
+            left: -80px;
         }
+
         .left-panel .circle-2 {
-            width: 200px; height: 200px;
-            bottom: 20px; right: -70px;
+            width: 200px;
+            height: 200px;
+            bottom: 20px;
+            right: -70px;
         }
 
         .brand {
@@ -84,19 +99,28 @@ if (isset($_POST['btn_login'])) {
             align-items: center;
             gap: 10px;
         }
+
         .brand-icon {
-            width: 38px; height: 38px;
+            width: 38px;
+            height: 38px;
             background-color: #f5a623;
             border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
         }
+
         .brand-name {
             font-size: 1.2rem;
             font-weight: 700;
             color: #fff;
         }
-        .brand-name span { color: #f5a623; }
+
+        .brand-name span {
+            color: #f5a623;
+        }
 
         .left-content {
             position: relative;
@@ -108,6 +132,7 @@ if (isset($_POST['btn_login'])) {
             align-items: center;
             text-align: center;
         }
+
         .left-content h1 {
             font-size: 2.2rem;
             font-weight: 800;
@@ -115,10 +140,14 @@ if (isset($_POST['btn_login'])) {
             line-height: 1.3;
             margin-bottom: 16px;
         }
-        .left-content h1 span { color: #f5a623; }
+
+        .left-content h1 span {
+            color: #f5a623;
+        }
+
         .left-content p {
             font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             line-height: 1.7;
         }
 
@@ -144,6 +173,7 @@ if (isset($_POST['btn_login'])) {
             color: #7d1128;
             margin-bottom: 4px;
         }
+
         .right-panel .subtitle {
             font-size: 0.85rem;
             color: #1f1d1d;
@@ -157,19 +187,31 @@ if (isset($_POST['btn_login'])) {
             margin-bottom: 4px;
         }
 
-        .field-wrap { position: relative; }
-        .field-icon {
-            position: absolute; left: 14px; top: 50%;
-            transform: translateY(-50%);
-            font-size: 16px; color: #999; pointer-events: none;
+        .field-wrap {
+            position: relative;
         }
+
+        .field-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #999;
+            pointer-events: none;
+        }
+
         .icon-input {
             padding-left: 40px !important;
             border-radius: 999px !important;
             border-color: #ddd !important;
             font-size: 0.9rem;
         }
-        .icon-input::placeholder { color: #bbb; }
+
+        .icon-input::placeholder {
+            color: #bbb;
+        }
+
         .icon-input:focus {
             border-color: #7d1128 !important;
             box-shadow: 0 0 0 0.2rem rgba(125, 17, 40, 0.15) !important;
@@ -185,7 +227,10 @@ if (isset($_POST['btn_login'])) {
             width: 100%;
             font-size: 0.95rem;
         }
-        .btn-login:hover { background-color: #c41e3d; }
+
+        .btn-login:hover {
+            background-color: #c41e3d;
+        }
 
         .footer-text {
             position: absolute;
@@ -194,6 +239,7 @@ if (isset($_POST['btn_login'])) {
             color: #aaa;
             text-align: center;
         }
+
         .footer-text span {
             color: #7d1128;
             font-weight: 600;
@@ -228,8 +274,10 @@ if (isset($_POST['btn_login'])) {
 
                 <form method="POST">
                     <?php if (isset($_GET['err'])): ?>
-                        <div class="alert alert-danger p-2 text-center mb-3" style="font-size: 0.85em; border-radius: 999px;">
+                        <div class="alert alert-danger p-2 text-center mb-3"
+                            style="font-size: 0.85em; border-radius: 999px;">
                             <?php echo ($_GET['err'] == 'empty') ? 'All fields are required.' : 'Invalid credentials.'; ?>
+
                         </div>
                     <?php endif; ?>
 
@@ -237,17 +285,20 @@ if (isset($_POST['btn_login'])) {
                         <label class="form-label">Username</label>
                         <div class="field-wrap">
                             <i class="ti ti-user field-icon"></i>
-                            <input type="text" name="txt_user" class="form-control icon-input" placeholder="Enter your username" required>
+                            <input type="text" name="txt_user" class="form-control icon-input"
+                                placeholder="Enter your username" required>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Password</label>
-                            <div class="field-wrap">
-                                <i class="ti ti-lock field-icon"></i>
-                                    <input type="password" name="txt_pass" id="txt_pass" class="form-control icon-input" placeholder="Enter your password" style="padding-right: 42px !important;" required>
-                                <i class="ti ti-eye" id="toggle-pass" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px; color: #999;"></i>
-                            </div>
+                        <div class="field-wrap">
+                            <i class="ti ti-lock field-icon"></i>
+                            <input type="password" name="txt_pass" id="txt_pass" class="form-control icon-input"
+                                placeholder="Enter your password" style="padding-right: 42px !important;" required>
+                            <i class="ti ti-eye" id="toggle-pass"
+                                style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px; color: #999;"></i>
+                        </div>
                     </div>
 
                     <button type="submit" name="btn_login" class="btn-login mt-1">Login</button>
@@ -258,19 +309,20 @@ if (isset($_POST['btn_login'])) {
         </div>
 
     </div>
-        <script>
-            const toggle = document.getElementById('toggle-pass');
-            const passInput = document.getElementById('txt_pass');
+    <script>
+        const toggle = document.getElementById('toggle-pass');
+        const passInput = document.getElementById('txt_pass');
 
-                toggle.addEventListener('click', () => {
-                    if (passInput.type === 'password') {
-                            passInput.type = 'text';
-                            toggle.classList.replace('ti-eye', 'ti-eye-off');
-                    } else {
-                            passInput.type = 'password';
-                            toggle.classList.replace('ti-eye-off', 'ti-eye');
-                        }
-             });
-        </script>
+        toggle.addEventListener('click', () => {
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                toggle.classList.replace('ti-eye', 'ti-eye-off');
+            } else {
+                passInput.type = 'password';
+                toggle.classList.replace('ti-eye-off', 'ti-eye');
+            }
+        });
+    </script>
 </body>
+
 </html>
