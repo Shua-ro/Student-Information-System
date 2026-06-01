@@ -2,7 +2,7 @@
 session_start();
 include 'config.php';
 
-// If already logged in, bypass login screen
+// If already logged in, redirect to index.php
 if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true) {
     header("Location: index.php");
     exit();
@@ -22,7 +22,7 @@ if (isset($_POST['btn_login'])) {
 
     if (mysqli_num_rows($result) === 1) {
         $user = mysqli_fetch_assoc($result);
-        // Verify user input password against database-encrypted hash
+        // Verify kung yung $password ay same na nasa database
         if ($password === $user['password']) {
             session_regenerate_id(true);
             $_SESSION['authenticated'] = true;
@@ -30,6 +30,8 @@ if (isset($_POST['btn_login'])) {
             header("Location: index.php");
             exit();
         }
+    } else {
+        echo "There's registered account in the database";
     }
 
     header("Location: login.php?err=invalid");
