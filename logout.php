@@ -1,11 +1,26 @@
 <?php
 session_start();
 
-$_SESSION = array();
-
+session_unset();
 session_destroy();
-
-header("Location: login.php");
-exit();
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <script>
+        location.replace("login.php");
+    </script>
+
+</head>
+
+<body>
+</body>
+
+</html>
+
+
 

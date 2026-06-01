@@ -24,6 +24,7 @@ if (isset($_POST['btn_login'])) {
         $user = mysqli_fetch_assoc($result);
         // Verify user input password against database-encrypted hash
         if ($password === $user['password']) {
+            session_regenerate_id(true);
             $_SESSION['authenticated'] = true;
             $_SESSION['username'] = $user['username'];
             header("Location: index.php");
