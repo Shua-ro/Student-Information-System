@@ -1,5 +1,13 @@
-<?php
-include 'config.php';
+<?php 
+session_start(); 
+
+if (!isset($_SESSION['authenticated'])) { 
+    header("Location: login.php"); 
+    exit(); 
+
+    } 
+
+    include 'config.php';
 
 // Save a new student to the database
 /* TODO: Add a filter here to avoid SQL Injection & Move it into a separate file.
@@ -63,6 +71,10 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
     
     <div class="add-refresh">
         <button onclick="window.location.href='add.php'" class="default-btn">Add Student</button>
+    <a href="logout.php" class="default-btn">
+    Logout
+    </a>
+
         <select class="filter-select" onchange="location.href='?section='+this.value">
             <option value="">All Sections</option>
             <?php while ($s = mysqli_fetch_assoc($sections_result)): ?>
