@@ -62,6 +62,7 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
+    <script src="search.js" defer></script>
 </head>
 
 <body>
