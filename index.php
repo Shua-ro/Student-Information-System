@@ -47,7 +47,7 @@ $program_param = $program_filter ? "&course=$program_filter" : '';
 
 // Year filter
 $year_filter = isset($_GET['year']) && $_GET['year'] !== '' ? mysqli_real_escape_string($conn, $_GET['year']) : '';
-$year_param = $program_filter ? "&year=$year_filter" : '';
+$year_param = $year_filter ? "&year=$year_filter" : '';
 
 // Gender fitler
 
@@ -141,7 +141,7 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                     <?php endwhile; ?>
                 </select>
                 <select class="filter-pill"
-                    onchange="location.href='?section=' + this.value + '<?php echo $section_param; ?>' +'<?php echo $year_param ?>'">
+                    onchange="location.href='?course=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $year_param ?>'">
                     <option value="">All Program</option>
                     <?php
                     // Reset sections result pointer
@@ -153,7 +153,7 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                     <?php endwhile; ?>
                 </select>
                 <select class="filter-pill"
-                    onchange="location.href='?section=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $program_param ?>'  ">
+                    onchange="location.href='?year=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $program_param ?>'  ">
                     <option value="">All Year Level</option>
                     <?php
                     // Reset sections result pointer
