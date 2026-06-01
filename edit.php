@@ -18,7 +18,6 @@ if (!$row) {
     exit();
 }
 
-// Update the student's info when the form is submitted
 /* TODO: Add a filter here to avoid SQL Injection  */
 if (isset($_POST['update'])) {
     $student_id = $_POST['student_id'];

@@ -12,7 +12,6 @@
   --navbar-bg: #3c0919;
 }
 
-/* ── RESET ── */
 *,
 *::before,
 *::after {
@@ -133,7 +132,7 @@ body {
   color: var(--text-muted);
 }
 
-/* ── FILTER CARD ── */
+/* FILTER CARD */
 .filter-card {
   background: var(--card-bg);
   border-radius: 14px;
@@ -220,7 +219,7 @@ body {
   outline: none;
 }
 
-/* ── TABLE CARD ── */
+/* TABLE CARD  */
 .table-card {
   background: var(--card-bg);
   border-radius: 14px;
@@ -267,7 +266,7 @@ body {
   font-size: 16px;
 }
 
-/* ── TABLE ── */
+/* TABLE */
 .table-wrap {
   overflow-x: auto;
 }
@@ -324,7 +323,7 @@ td.sec {
   align-self: unset;
 }
 
-/* ── ACTIONS ── */
+/*  ACTIONS  */
 .actions-cell {
   white-space: nowrap;
 }
@@ -356,7 +355,7 @@ td.sec {
   font-weight: 400;
 }
 
-/* ── PAGINATION ── */
+/* PAGINATION */
 .pagination-wrap {
   padding: 18px 24px 16px;
   display: flex;
@@ -412,7 +411,7 @@ td.sec {
   text-align: center;
 }
 
-/* ── FOOTER ── */
+/* FOOTER */
 .site-footer {
   background-color: var(--navbar-bg);
   text-align: center;
@@ -427,7 +426,7 @@ td.sec {
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* ── ALERT STATUS ── */
+/* ALERT STATUS  */
 .alert-status {
   position: fixed;
   top: 84px;
@@ -449,7 +448,7 @@ td.sec {
   font-size: 18px;
 }
 
-/* ── FORM PAGES (add.php / edit.php) ── */
+/* FORM PAGES (add.php / edit.php) */
 body.form-page {
   justify-content: center;
   align-items: center;
@@ -518,7 +517,7 @@ select:focus {
   margin-top: 8px;
 }
 
-/* ── CLIENT-SIDE SEARCH HIGHLIGHT ── */
+/* CLIENT-SIDE SEARCH HIGHLIGHT */
 tr.hidden-row {
   display: none;
 }
