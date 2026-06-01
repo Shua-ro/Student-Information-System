@@ -128,7 +128,7 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
             <span class="filter-label">Filter</span>
             <div class="filter-pills">
                 <select class="filter-pill"
-                    onchange="location.href='?course=' + this.value + '<?php echo $program_param; ?>' + '<?php echo $year_param ?>'">
+                    onchange="location.href='?section=' + this.value + '<?php echo $program_param; ?>' + '<?php echo $year_param ?>'">
                     <option value="">All Sections</option>
                     <?php
                     // Reset sections result pointer
@@ -140,7 +140,7 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                     <?php endwhile; ?>
                 </select>
                 <select class="filter-pill"
-                    onchange="location.href='?course=' + this.value + '<?php echo $section_param; ?>' +'<?php echo $year_param ?>'">
+                    onchange="location.href='?section=' + this.value + '<?php echo $section_param; ?>' +'<?php echo $year_param ?>'">
                     <option value="">All Program</option>
                     <?php
                     // Reset sections result pointer
@@ -152,7 +152,7 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                     <?php endwhile; ?>
                 </select>
                 <select class="filter-pill"
-                    onchange="location.href='?course=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $program_param ?>'  ">
+                    onchange="location.href='?section=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $program_param ?>'  ">
                     <option value="">All Year Level</option>
                     <?php
                     // Reset sections result pointer
