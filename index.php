@@ -1,17 +1,12 @@
-<?php 
-session_start(); 
+<?php
+session_start();
 
-if (!isset($_SESSION['authenticated'])) { 
-    header("Location: login.php"); 
-    exit(); 
+if (!isset($_SESSION['authenticated'])) {
+    header("Location: login.php");
+    exit();
+}
 
-    } 
-
-    include 'config.php';
-
-// Save a new student to the database
-/* TODO: Add a filter here to avoid SQL Injection & Move it into a separate file.
- Turn it into a MODAL and Create button */
+include 'config.php';
 
 if (isset($_POST['save'])) {
     $student_id = mysqli_real_escape_string($conn, $_POST['student_id']);
@@ -29,7 +24,7 @@ if (isset($_POST['save'])) {
 }
 
 // Pagination setup
-$limit = 5;
+$limit = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
@@ -55,101 +50,163 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
 
 <head>
     <meta charset="UTF-8">
-    <title>SIS Engine Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIS Portal — Student Records</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 
-
-<?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
-    <div class="alert-status">Completed successfully.</div>
-<?php endif; ?>
-
 <body>
-    <h1>Student Records</h1>
-    <p>Manage and view all student information</p>
-    
-    <div class="add-refresh">
-        <button onclick="window.location.href='add.php'" class="default-btn">Add Student</button>
-    <a href="logout.php" class="default-btn">
-    Logout
-    </a>
 
-        <select class="filter-select" onchange="location.href='?section='+this.value">
-            <option value="">All Sections</option>
-            <?php while ($s = mysqli_fetch_assoc($sections_result)): ?>
-                <option value="<?php echo $s['section']; ?>" <?php echo $section_filter === $s['section'] ? 'selected' : ''; ?>><?php echo $s['section']; ?></option>
-            <?php endwhile; ?>
-        </select>
-    </div>    
-    <h3>Students</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Course</th>
-                <th>Section</th>
-                <th>Year</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                <tr>
-                    <td><strong><?php echo $row['student_id']; ?></strong></td>
-                    <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
-                    <td><?php echo $row['email']; ?></td>
-                    <td><?php echo $row['course']; ?></td>
-                    <td class="sec">
-                        <p><?php echo $row['section']; ?></p>
-                    </td>
-                    <td><?php echo $row['year_level']; ?></td>
-                    <td>
-                        <a class="action-link edit-lnk" href="edit.php?id=<?php echo $row['id']; ?>">Edit</a> |
-                        <a class="action-link del-lnk" href="delete.php?id=<?php echo $row['id']; ?>"
-                            onclick="return confirm('Delete?')">Delete</a>
-                    </td>
-                </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
-
-    <?php if ($total_pages > 1): ?>
-        <div class="pagination">
-            <?php if ($page > 1): ?>
-                <a href="?page=1<?php echo $section_param; ?>">&laquo; First</a>
-                <a href="?page=<?php echo $page - 1; ?><?php echo $section_param; ?>">&lsaquo; Prev</a>
-            <?php endif; ?>
-
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?page=<?php echo $i; ?><?php echo $section_param; ?>" class="<?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
-            <?php endfor; ?>
-
-            <?php if ($page < $total_pages): ?>
-                <a href="?page=<?php echo $page + 1; ?><?php echo $section_param; ?>">Next &rsaquo;</a>
-                <a href="?page=<?php echo $total_pages; ?><?php echo $section_param; ?>">Last &raquo;</a>
-            <?php endif; ?>
-        </div>
+    <?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
+        <div class="alert-status"><i class="ti ti-circle-check"></i> Student added successfully.</div>
     <?php endif; ?>
 
-    <?php
-    /*TODO:Fix bug on the record counting feature  */ ?>
-    <p class="record-count">Showing
-        <?php
-        if ($total_records % $limit == 0) {
-            echo $limit * $page;
-        } else {
-            $last_record = ($limit * $total_pages) - $total_records;
-            $final_record = ($limit * $total_pages) - $last_record;
-            $count = ($page != $total_pages) ? $limit * $page : $final_record;
-            echo $count;
-        }
-        ; ?>
-        of
-        <?php echo $total_records; ?> records
-    </p>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-logo">
+                <div class="logo-icon"><i class="ti ti-school"></i></div>
+                <span class="logo-text">SIS<span class="logo-accent">Portal</span></span>
+            </div>
+        </div>
+        <div class="navbar-right">
+            <a href="#" class="nav-link">Dashboard</a>
+            <a href="logout.php" class="nav-btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Student Records</h1>
+            <p>Manage and view all student information</p>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="filter-card">
+            <div class="search-wrap">
+                <i class="ti ti-search"></i>
+                <input type="text" id="searchInput" placeholder="Search...">
+            </div>
+            <span class="filter-label">Filter</span>
+            <div class="filter-pills">
+                <select class="filter-pill" onchange="location.href='?section='+this.value">
+                    <option value="">All Sections</option>
+                    <?php
+                    // Reset sections result pointer
+                    $sections_result2 = mysqli_query($conn, "SELECT DISTINCT section FROM students ORDER BY section");
+                    while ($s = mysqli_fetch_assoc($sections_result2)): ?>
+                        <option value="<?php echo $s['section']; ?>" <?php echo $section_filter === $s['section'] ? 'selected' : ''; ?>>
+                            <?php echo $s['section']; ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+                <select class="filter-pill">
+                    <option>All Program</option>
+                </select>
+                <select class="filter-pill">
+                    <option>All Year Level</option>
+                </select>
+                <select class="filter-pill">
+                    <option>All Gender</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="table-card">
+            <div class="table-card-header">
+                <h3 class="table-title">Students</h3>
+                <a href="add.php" class="btn-add"><i class="ti ti-plus"></i> Add Student</a>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Course</th>
+                            <th>Section</th>
+                            <th>Year</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                            <tr>
+                                <td><strong><?php echo htmlspecialchars($row['student_id']); ?></strong></td>
+                                <td><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                <td><?php echo htmlspecialchars($row['course']); ?></td>
+                                <td><?php echo htmlspecialchars($row['section']); ?></td>
+                                <td><?php echo htmlspecialchars($row['year_level']); ?></td>
+                                <td class="actions-cell">
+                                    <a class="action-link edit-lnk" href="edit.php?id=<?php echo $row['id']; ?>">Edit</a>
+                                    <span class="action-sep">|</span>
+                                    <a class="action-link del-lnk" href="delete.php?id=<?php echo $row['id']; ?>"
+                                        onclick="return confirm('Are you sure you want to delete this student?')">Delete</a>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <?php if ($total_pages > 1): ?>
+                <div class="pagination-wrap">
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=1<?php echo $section_param; ?>" class="pg-btn">&laquo; First</a>
+                            <a href="?page=<?php echo $page - 1; ?><?php echo $section_param; ?>" class="pg-btn">&lsaquo;
+                                Prev</a>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                            <a href="?page=<?php echo $i; ?><?php echo $section_param; ?>"
+                                class="pg-btn <?php echo $i === $page ? 'active' : ''; ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $total_pages): ?>
+                            <a href="?page=<?php echo $page + 1; ?><?php echo $section_param; ?>" class="pg-btn">Next
+                                &rsaquo;</a>
+                            <a href="?page=<?php echo $total_pages; ?><?php echo $section_param; ?>" class="pg-btn">Last
+                                &raquo;</a>
+                        <?php endif; ?>
+                    </div>
+
+                    <p class="record-count">Showing
+                        <?php
+                        if ($total_records % $limit == 0) {
+                            echo $limit * $page;
+                        } else {
+                            $last_record = ($limit * $total_pages) - $total_records;
+                            $final_record = ($limit * $total_pages) - $last_record;
+                            $count = ($page != $total_pages) ? $limit * $page : $final_record;
+                            echo $count;
+                        } ?>
+                        of <?php echo $total_records; ?> records
+                    </p>
+                </div>
+            <?php endif; ?>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <p>© 2026 <strong>SIS Portal</strong> &nbsp;·&nbsp; All rights reserved</p>
+    </footer>
 
 </body>
 
