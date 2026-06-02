@@ -46,7 +46,8 @@ $year_filter = isset($_GET['year']) && $_GET['year'] !== '' ? mysqli_real_escape
 $year_param = $year_filter ? "&year=$year_filter" : '';
 
 // Gender fitler
-
+$gender_filter = isset($_GET['gender']) && $_GET['gender'] !== '' ? mysqli_real_escape_string($conn, $_GET['gender']) : '';
+$gender_param = $gender_filter ? "&gender=$gender_filter" : '';
 //Where clause
 $conditions = [];
 if ($section_filter) {
@@ -54,6 +55,12 @@ if ($section_filter) {
 }
 if ($program_filter) {
     $conditions[] = "course = '$program_filter'";
+}
+if ($year_filter) {
+    $conditions[] = "year_level = '$year_param'";
+}
+if ($gender_param) {
+    $conditions[] = "gender = '$gender_param'";
 }
 $where_clause = '';
 if (!empty($conditions)) {
@@ -125,7 +132,7 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
             <span class="filter-label">Filter</span>
             <div class="filter-pills">
                 <select class="filter-pill"
-                    onchange="location.href='?section=' + this.value + '<?php echo $program_param; ?>' + '<?php echo $year_param ?>'">
+                    onchange="location.href='?section=' + this.value + '<?php echo $program_param; ?>' + '<?php echo $year_param ?>' + '<?php echo $gender_param ?>'">
                     <option value="">All Sections</option>
                     <?php
                     // Reset sections result pointer
@@ -137,7 +144,7 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                     <?php endwhile; ?>
                 </select>
                 <select class="filter-pill"
-                    onchange="location.href='?course=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $year_param ?>'">
+                    onchange="location.href='?course=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $year_param ?>' + '<?php echo $gender_param ?>'">
                     <option value="">All Program</option>
                     <?php
                     // Reset sections result pointer
@@ -149,7 +156,7 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                     <?php endwhile; ?>
                 </select>
                 <select class="filter-pill"
-                    onchange="location.href='?year=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $program_param ?>'  ">
+                    onchange="location.href='?year=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $program_param ?>' + '<?php echo $gender_param ?>'">
                     <option value="">All Year Level</option>
                     <?php
                     // Reset sections result pointer
@@ -160,8 +167,16 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                         </option>
                     <?php endwhile; ?>
                 </select>
-                <select class="filter-pill">
-                    <option>All Gender</option>
+                <select class="filter-pill"
+                    onchange="location.href='?gender=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $program_param ?>' + '<?php echo $year_param ?>'  ">
+                    <option value="">All Gender</option>
+                    <?php
+                    $gender_result2 = mysqli_query($conn, "SELECT DISTINCT gender FROM students ORDER BY gender");
+                    while ($g = mysqli_fetch_assoc($gender_result2)): ?>
+                        <option value="<?php echo $g['gender']; ?>" <?php echo $gender_filter === $g['gender'] ? 'selected' : ''; ?>>
+                            <?php echo $g['gender']; ?>
+                        </option>
+                    <?php endwhile; ?>
                 </select>
             </div>
         </div>
@@ -179,10 +194,10 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                         <tr>
                             <th>Student ID</th>
                             <th>Name</th>
-                            <th>Email</th>
                             <th>Course</th>
                             <th>Section</th>
                             <th>Year</th>
+                            <th>Gender</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -191,10 +206,10 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                             <tr>
                                 <td><strong><?php echo htmlspecialchars($row['student_id']); ?></strong></td>
                                 <td><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
-                                <td><?php echo htmlspecialchars($row['email']); ?></td>
                                 <td><?php echo htmlspecialchars($row['course']); ?></td>
                                 <td><?php echo htmlspecialchars($row['section']); ?></td>
                                 <td><?php echo htmlspecialchars($row['year_level']); ?></td>
+                                <td><?php echo htmlspecialchars($row['gender']); ?></td>
                                 <td class="actions-cell">
                                     <a class="action-link edit-lnk" href="edit.php?id=<?php echo $row['id']; ?>">Edit</a>
                                     <span class="action-sep">|</span>

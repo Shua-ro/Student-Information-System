@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ── Auto-hide success alert ──
+    // Time alert countdown
     var alert = document.querySelector('.alert-status');
     if (alert) {
         history.replaceState(null, '', 'index.php');
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 3000);
     }
 
-    // ── Live search filter ──
+    // Search Button filter
     var searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('keyup', function () {

@@ -1,8 +1,8 @@
-<?php 
+<?php
 include 'config.php';
 
 if (isset($_GET['id'])) {
-    $id = (int)$_GET['id']; // Turn into a number so nobody can inject bad SQL
+    $id = (int) $_GET['id'];
     mysqli_query($conn, "DELETE FROM students WHERE id=$id");
 }
 

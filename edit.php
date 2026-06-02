@@ -42,7 +42,7 @@ if (isset($_POST['update'])) {
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="form-page">
 
     <div class="edit-box">
         <h3>Modify Student Records</h3>
