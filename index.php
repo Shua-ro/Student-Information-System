@@ -13,13 +13,12 @@ if (isset($_POST['save'])) {
     $student_id = mysqli_real_escape_string($conn, $_POST['student_id']);
     $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
     $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
     $course = mysqli_real_escape_string($conn, $_POST['course']);
     $section = mysqli_real_escape_string($conn, $_POST['section']);
     $year = mysqli_real_escape_string($conn, $_POST['year']);
 
-    mysqli_query($conn, "INSERT INTO students (student_id, first_name, last_name, email, course, section, year_level)
-                         VALUES ('$student_id', '$first_name', '$last_name', '$email', '$course','$section', '$year')");
+    mysqli_query($conn, "INSERT INTO students (student_id, first_name, last_name, course, section, year_level)
+                         VALUES ('$student_id', '$first_name', '$last_name', '$course','$section', '$year')");
     header("Location: index.php?status=success");
     exit();
 }
@@ -30,16 +29,15 @@ $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] 
 $offset = ($page - 1) * $limit;
 
 $course_filter = isset($_GET['course']) && $_GET['course'] !== '' ? mysqli_real_escape_string($conn, $_GET['course']) : '';
-$course_param = $course_filter ? "&section=$course_filter" : '';
+$course_param = $course_filter ? "&course=$course_filter" : '';
 
 // Section filter
 $section_filter = isset($_GET['section']) && $_GET['section'] !== '' ? mysqli_real_escape_string($conn, $_GET['section']) : '';
-/* $where_clause = $section_filter ? "WHERE section = '$section_filter' & " : ''; */
 $section_param = $section_filter ? "&section=$section_filter" : '';
 
-// Program filter
-$program_filter = isset($_GET['course']) && $_GET['course'] !== '' ? mysqli_real_escape_string($conn, $_GET['course']) : '';
-$program_param = $program_filter ? "&course=$program_filter" : '';
+// Program filter (same as course filter)
+$program_filter = $course_filter;
+$program_param = $course_param;
 
 // Year filter
 $year_filter = isset($_GET['year']) && $_GET['year'] !== '' ? mysqli_real_escape_string($conn, $_GET['year']) : '';
@@ -57,10 +55,10 @@ if ($program_filter) {
     $conditions[] = "course = '$program_filter'";
 }
 if ($year_filter) {
-    $conditions[] = "year_level = '$year_param'";
+    $conditions[] = "year_level = '$year_filter'";
 }
-if ($gender_param) {
-    $conditions[] = "gender = '$gender_param'";
+if ($gender_filter) {
+    $conditions[] = "gender = '$gender_filter'";
 }
 $where_clause = '';
 if (!empty($conditions)) {
@@ -76,8 +74,24 @@ $total_pages = ceil($total_records / $limit);
 // Get records for current page, newest first
 $result = mysqli_query($conn, "SELECT * FROM students $where_clause ORDER BY id DESC LIMIT $limit OFFSET $offset");
 
-// Get distinct sections for filter dropdown
-$sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students ORDER BY section");
+// Get distinct sections for filter dropdown (merged with permanent defaults)
+$permanent_courses = ['BSMT', 'BSHM'];
+$courses_result3 = mysqli_query($conn, "SELECT DISTINCT course FROM students ORDER BY course");
+$db_courses2 = [];
+while ($row3 = mysqli_fetch_assoc($courses_result3)) {
+    $db_courses2[] = $row3['course'];
+}
+$all_courses_filter = array_unique(array_merge($permanent_courses, $db_courses2));
+sort($all_courses_filter);
+
+$permanent_sections2 = ['MTJ2-B2', 'Section 1'];
+$sections_result3 = mysqli_query($conn, "SELECT DISTINCT section FROM students ORDER BY section");
+$db_sections2 = [];
+while ($row3 = mysqli_fetch_assoc($sections_result3)) {
+    $db_sections2[] = $row3['section'];
+}
+$all_sections_filter = array_unique(array_merge($permanent_sections2, $db_sections2));
+sort($all_sections_filter);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -134,26 +148,20 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                 <select class="filter-pill"
                     onchange="location.href='?section=' + this.value + '<?php echo $program_param; ?>' + '<?php echo $year_param ?>' + '<?php echo $gender_param ?>'">
                     <option value="">All Sections</option>
-                    <?php
-                    // Reset sections result pointer
-                    $sections_result2 = mysqli_query($conn, "SELECT DISTINCT section FROM students ORDER BY section");
-                    while ($s = mysqli_fetch_assoc($sections_result2)): ?>
-                        <option value="<?php echo $s['section']; ?>" <?php echo $section_filter === $s['section'] ? 'selected' : ''; ?>>
-                            <?php echo $s['section']; ?>
+                    <?php foreach ($all_sections_filter as $s): ?>
+                        <option value="<?php echo $s; ?>" <?php echo $section_filter === $s ? 'selected' : ''; ?>>
+                            <?php echo $s; ?>
                         </option>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </select>
                 <select class="filter-pill"
                     onchange="location.href='?course=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $year_param ?>' + '<?php echo $gender_param ?>'">
                     <option value="">All Program</option>
-                    <?php
-                    // Reset sections result pointer
-                    $programs_result2 = mysqli_query($conn, "SELECT DISTINCT course FROM students ORDER BY course");
-                    while ($p = mysqli_fetch_assoc($programs_result2)): ?>
-                        <option value="<?php echo $p['course']; ?>" <?php echo $program_filter === $p['course'] ? 'selected' : ''; ?>>
-                            <?php echo $p['course']; ?>
+                    <?php foreach ($all_courses_filter as $p): ?>
+                        <option value="<?php echo $p; ?>" <?php echo $program_filter === $p ? 'selected' : ''; ?>>
+                            <?php echo $p; ?>
                         </option>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </select>
                 <select class="filter-pill"
                     onchange="location.href='?year=' + this.value + '<?php echo $section_param; ?>' + '<?php echo $program_param ?>' + '<?php echo $gender_param ?>'">
@@ -227,25 +235,25 @@ $sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students OR
                 <div class="pagination-wrap">
                     <div class="pagination">
                         <?php if ($page > 1): ?>
-                            <a href="?page=1<?php echo $section_param; ?><?php echo $program_param; ?>" class="pg-btn">&laquo;
+                            <a href="?page=1<?php echo $section_param; ?><?php echo $program_param; ?><?php echo $year_param; ?><?php echo $gender_param; ?>" class="pg-btn">&laquo;
                                 First</a>
-                            <a href="?page=<?php echo $page - 1; ?><?php echo $section_param; ?><?php echo $program_param; ?>"
+                            <a href="?page=<?php echo $page - 1; ?><?php echo $section_param; ?><?php echo $program_param; ?><?php echo $year_param; ?><?php echo $gender_param; ?>"
                                 class="pg-btn">&lsaquo;
                                 Prev</a>
                         <?php endif; ?>
 
                         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                            <a href="?page=<?php echo $i; ?><?php echo $section_param; ?><?php echo $program_param; ?>"
+                            <a href="?page=<?php echo $i; ?><?php echo $section_param; ?><?php echo $program_param; ?><?php echo $year_param; ?><?php echo $gender_param; ?>"
                                 class="pg-btn <?php echo $i === $page ? 'active' : ''; ?>">
                                 <?php echo $i; ?>
                             </a>
                         <?php endfor; ?>
 
                         <?php if ($page < $total_pages): ?>
-                            <a href="?page=<?php echo $page + 1; ?><?php echo $section_param; ?><?php echo $program_param; ?>"
+                            <a href="?page=<?php echo $page + 1; ?><?php echo $section_param; ?><?php echo $program_param; ?><?php echo $year_param; ?><?php echo $gender_param; ?>"
                                 class="pg-btn">Next
                                 &rsaquo;</a>
-                            <a href="?page=<?php echo $total_pages; ?><?php echo $section_param; ?><?php echo $program_param; ?>"
+                            <a href="?page=<?php echo $total_pages; ?><?php echo $section_param; ?><?php echo $program_param; ?><?php echo $year_param; ?><?php echo $gender_param; ?>"
                                 class="pg-btn">Last
                                 &raquo;</a>
                         <?php endif; ?>

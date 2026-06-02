@@ -18,20 +18,40 @@ if (!$row) {
     exit();
 }
 
-/* TODO: Add a filter here to avoid SQL Injection  */
 if (isset($_POST['update'])) {
-    $student_id = $_POST['student_id'];
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $email = $_POST['email'];
-    $course = $_POST['course'];
-    $section = $_POST['section'];
-    $year = $_POST['year'];
+    $student_id = mysqli_real_escape_string($conn, $_POST['student_id']);
+    $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
+    $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
+    $course = mysqli_real_escape_string($conn, $_POST['course']);
+    $section = mysqli_real_escape_string($conn, $_POST['section']);
+    $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+    $year = mysqli_real_escape_string($conn, $_POST['year']);
 
-    mysqli_query($conn, "UPDATE students SET student_id='$student_id', first_name='$first_name', last_name='$last_name', email='$email', course='$course', section='$section', year_level='$year' WHERE id=$id");
+    mysqli_query($conn, "UPDATE students SET student_id='$student_id', first_name='$first_name', last_name='$last_name', course='$course', section='$section', year_level='$year', gender='$gender' WHERE id=$id");
     header("Location: index.php?status=success");
     exit();
 }
+?>
+
+<!-- Gets all distinct values from database for dropdowns (merged with permanent defaults) -->
+<?php
+$permanent_courses = ['BSMT', 'BSHM'];
+$courses_result = mysqli_query($conn, "SELECT DISTINCT course FROM students ORDER BY course");
+$db_courses = [];
+while ($row2 = mysqli_fetch_assoc($courses_result)) {
+    $db_courses[] = $row2['course'];
+}
+$all_courses = array_unique(array_merge($permanent_courses, $db_courses));
+sort($all_courses);
+
+$permanent_sections = ['MTJ2-B2', 'Section 1'];
+$sections_result = mysqli_query($conn, "SELECT DISTINCT section FROM students ORDER BY section");
+$db_sections = [];
+while ($row2 = mysqli_fetch_assoc($sections_result)) {
+    $db_sections[] = $row2['section'];
+}
+$all_sections = array_unique(array_merge($permanent_sections, $db_sections));
+sort($all_sections);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,22 +74,41 @@ if (isset($_POST['update'])) {
                 required>
             <input type="text" name="last_name" value="<?php echo $row['last_name']; ?>" placeholder="Last Name"
                 required>
-            <input type="email" name="email" value="<?php echo $row['email']; ?>" placeholder="Email" required>
-            <input type="text" name="course" value="<?php echo $row['course']; ?>"
-                placeholder="Course (e.g., BSMT, BSHM)" required>
-            <input type="text" name="section" value="<?php echo $row['section']; ?>"
-                placeholder="Section (e.g., MTJ2-B2)" required>
+            <select name="course" required>
+                <?php foreach ($all_courses as $c): ?>
+                    <option value="<?php echo $c; ?>"
+                        <?php echo $row['course'] === $c ? 'selected' : ''; ?>>
+                        <?php echo $c; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <select name="section" required>
+                <?php foreach ($all_sections as $s): ?>
+                    <option value="<?php echo $s; ?>"
+                        <?php echo $row['section'] === $s ? 'selected' : ''; ?>>
+                        <?php echo $s; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
             <select name="year" required>
-                <option value="1st Year" <?php if ($row['year_level'] == '1st Year')
-                    echo 'selected'; ?>>1st Year</option>
-                <option value="2nd Year" <?php if ($row['year_level'] == '2nd Year')
-                    echo 'selected'; ?>>2nd Year</option>
-                <option value="3rd Year" <?php if ($row['year_level'] == '3rd Year')
-                    echo 'selected'; ?>>3rd Year</option>
-                <option value="4th Year" <?php if ($row['year_level'] == '4th Year')
-                    echo 'selected'; ?>>4th Year</option>
-                <option value="5th Year" <?php if ($row['year_level'] == '5th Year')
-                    echo 'selected'; ?>>5th Year</option>
+                <?php $years = ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year']; ?>
+                <?php foreach ($years as $y): ?>
+                    <option value="<?php echo $y; ?>"
+                        <?php echo $row['year_level'] === $y ? 'selected' : ''; ?>>
+                        <?php echo $y; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <select name="gender" required>
+                <?php $genders = ['Male', 'Female']; ?>
+                <?php foreach ($genders as $g): ?>
+                    <option value="<?php echo $g; ?>"
+                        <?php echo $row['gender'] === $g ? 'selected' : ''; ?>>
+                        <?php echo $g; ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
             <div class="formbtns">
                 <button name="update" class="default-btn">Update</button>
