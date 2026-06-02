@@ -33,7 +33,7 @@ if (isset($_POST['update'])) {
 }
 ?>
 
-<!-- Gets all distinct values from database for dropdowns (merged with permanent defaults) -->
+
 <?php
 $permanent_courses = ['BSMT', 'BSHM'];
 $courses_result = mysqli_query($conn, "SELECT DISTINCT course FROM students ORDER BY course");

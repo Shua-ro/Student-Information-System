@@ -74,7 +74,6 @@ $total_pages = ceil($total_records / $limit);
 // Get records for current page, newest first
 $result = mysqli_query($conn, "SELECT * FROM students $where_clause ORDER BY id DESC LIMIT $limit OFFSET $offset");
 
-// Get distinct sections for filter dropdown (merged with permanent defaults)
 $permanent_courses = ['BSMT', 'BSHM'];
 $courses_result3 = mysqli_query($conn, "SELECT DISTINCT course FROM students ORDER BY course");
 $db_courses2 = [];

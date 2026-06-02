@@ -9,10 +9,8 @@ if (!isset($_SESSION['authenticated'])) {
 
 include 'config.php';
 
-// Permanent courses that always appear in dropdowns
 $permanent_courses = ['BSMT', 'BSHM'];
 
-// Also get courses from existing students (for future-added values)
 $courses_result = mysqli_query($conn, "SELECT DISTINCT course FROM students ORDER BY course");
 $db_courses = [];
 while ($row = mysqli_fetch_assoc($courses_result)) {
