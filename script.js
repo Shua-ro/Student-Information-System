@@ -11,17 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 3000);
     }
 
-    // Search Button filter
-    var searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('keyup', function () {
-            var query = this.value.toLowerCase().trim();
-            var rows = document.querySelectorAll('#studentTableBody tr');
-            rows.forEach(function (row) {
-                var text = row.textContent.toLowerCase();
-                row.classList.toggle('hidden-row', query !== '' && !text.includes(query));
-            });
-        });
-    }
+    
 
 });

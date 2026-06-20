@@ -94,6 +94,26 @@ INSERT INTO students (student_id, first_name, last_name, course, year_level, sec
 ('202530950', 'Joaquin Angelo Vargas', 'SONEJA', 'BSHM', '1st Year', 'Section 1', 'Male'),
 ('202530961', 'Edelhey Niña Quinlog', 'SISON', 'BSHM', '1st Year', 'Section 1', 'Female');
 
+
+CREATE TABLE courses (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(50) NOT NULL UNIQUE,
+  name VARCHAR(150) NULL
+);
+
+CREATE TABLE sections (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL UNIQUE
+);
+
+INSERT INTO courses (code, name) VALUES
+('BSMT', 'Bachelor of Science in Marine Transportation'),
+('BSHM', 'Bachelor of Science in Hospitality Management');
+
+INSERT INTO sections (name) VALUES
+('MTJ2-B2'),
+('Section 1');
+
 CREATE TABLE IF NOT EXISTS admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -102,3 +122,38 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 INSERT INTO admins (username, password) 
 VALUES ('admin', 'admin');
+
+CREATE TABLE subjects (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    subject_code VARCHAR(20)  NOT NULL UNIQUE,
+    subject_name VARCHAR(100) NOT NULL,
+    course       VARCHAR(50)  NOT NULL,
+    year_level   VARCHAR(50)  NOT NULL,
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE grades (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    student_id      INT NOT NULL,
+    subject_id      INT NOT NULL,
+    academic_year   VARCHAR(20) NOT NULL,
+    semester        VARCHAR(20) NOT NULL,
+    grade           DECIMAL(5,2) DEFAULT NULL,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_enrollment (student_id, subject_id, academic_year, semester),
+    CONSTRAINT fk_grades_student
+        FOREIGN KEY (student_id) REFERENCES students(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_grades_subject
+        FOREIGN KEY (subject_id) REFERENCES subjects(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO subjects (subject_code, subject_name, course, year_level) VALUES
+('MT101', 'Introduction to Marine Transportation', 'BSMT', '1st Year'),
+('MT102', 'Basic Seamanship', 'BSMT', '1st Year'),
+('MT103', 'Marine Navigation', 'BSMT', '1st Year'),
+('HM101', 'Hospitality Management Fundamentals', 'BSHM', '1st Year'),
+('HM102', 'Food Safety and Sanitation', 'BSHM', '1st Year'),
+('HM103', 'Front Office Operations', 'BSHM', '1st Year');

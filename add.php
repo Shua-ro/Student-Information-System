@@ -50,8 +50,8 @@ sort($all_sections);
             <select name="course" required>
                 <option value="" disabled selected>Select Course</option>
                 <?php foreach ($all_courses as $course): ?>
-                    <option value="<?php echo $course; ?>">
-                        <?php echo $course; ?>
+                    <option value="<?php echo htmlspecialchars($course); ?>">
+                        <?php echo htmlspecialchars($course); ?>
                     </option>
                 <?php endforeach; ?>
             </select>

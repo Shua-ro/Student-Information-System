@@ -28,6 +28,11 @@ if (isset($_POST['update'])) {
     $year = mysqli_real_escape_string($conn, $_POST['year']);
 
     mysqli_query($conn, "UPDATE students SET student_id='$student_id', first_name='$first_name', last_name='$last_name', course='$course', section='$section', year_level='$year', gender='$gender' WHERE id=$id");
+
+    // Keep the lookup tables in sync, same as add.php.
+    mysqli_query($conn, "INSERT IGNORE INTO courses (code) VALUES ('$course')");
+    mysqli_query($conn, "INSERT IGNORE INTO sections (name) VALUES ('$section')");
+
     header("Location: index.php?status=success");
     exit();
 }
