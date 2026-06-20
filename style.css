@@ -58,15 +58,17 @@ body {
 }
 
 .logo-icon {
-  width: 42px;
-  height: 42px;
-  background-color: var(--accent);
-  border-radius: 10px;
+  width: auto;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  color: var(--text-main);
+}
+
+.logo-icon img {
+  height: 100%;
+  width: auto;
+  display: block;
 }
 
 .logo-text {

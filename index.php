@@ -134,7 +134,7 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
     <nav class="navbar">
         <div class="navbar-left">
             <div class="navbar-logo">
-                <div class="logo-icon"><i class="ti ti-school"></i></div>
+                <div class="logo-icon"><img src="Logo2sis.svg" alt="SIS Portal logo"></div>
                 <span class="logo-text">SIS<span class="logo-accent">Portal</span></span>
             </div>
         </div>

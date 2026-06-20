@@ -104,15 +104,17 @@ if (isset($_POST['btn_login'])) {
         }
 
         .brand-icon {
-            width: 38px;
-            height: 38px;
-            background-color: #F5C842;
-            border-radius: 8px;
+            width: auto;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            color: #fff;
+        }
+
+        .brand-icon img {
+            height: 100%;
+            width: auto;
+            display: block;
         }
 
         .brand-name {
@@ -259,7 +261,7 @@ if (isset($_POST['btn_login'])) {
 
             <div class="brand">
                 <div class="brand-icon">
-                    <i class="ti ti-school"></i>
+                    <img src="Logo2sis.svg" alt="SIS Portal logo">
                 </div>
                 <div class="brand-name">SIS<span>Portal</span></div>
             </div>
