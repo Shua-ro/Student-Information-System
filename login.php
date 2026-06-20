@@ -69,7 +69,7 @@ if (isset($_POST['btn_login'])) {
 
         .left-panel {
             width: 40%;
-            background-color: #7d1128;
+            background-color: #2D3561;
             padding: 40px 36px;
             display: flex;
             flex-direction: column;
@@ -106,7 +106,7 @@ if (isset($_POST['btn_login'])) {
         .brand-icon {
             width: 38px;
             height: 38px;
-            background-color: #f5a623;
+            background-color: #F5C842;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -122,7 +122,7 @@ if (isset($_POST['btn_login'])) {
         }
 
         .brand-name span {
-            color: #f5a623;
+            color: #F5C842;
         }
 
         .left-content {
@@ -145,7 +145,7 @@ if (isset($_POST['btn_login'])) {
         }
 
         .left-content h1 span {
-            color: #f5a623;
+            color: #F5C842;
         }
 
         .left-content p {
@@ -173,7 +173,7 @@ if (isset($_POST['btn_login'])) {
         .right-panel h2 {
             font-size: 1.6rem;
             font-weight: 700;
-            color: #7d1128;
+            color: #2D3561;
             margin-bottom: 4px;
         }
 
@@ -216,12 +216,12 @@ if (isset($_POST['btn_login'])) {
         }
 
         .icon-input:focus {
-            border-color: #7d1128 !important;
+            border-color: #2D3561 !important;
             box-shadow: 0 0 0 0.2rem rgba(125, 17, 40, 0.15) !important;
         }
 
         .btn-login {
-            background-color: #7d1128;
+            background-color: #2D3561;
             border: none;
             border-radius: 999px;
             color: #fff;
@@ -232,7 +232,7 @@ if (isset($_POST['btn_login'])) {
         }
 
         .btn-login:hover {
-            background-color: #c41e3d;
+            background-color: #EBA44A;
         }
 
         .footer-text {
@@ -244,7 +244,7 @@ if (isset($_POST['btn_login'])) {
         }
 
         .footer-text span {
-            color: #7d1128;
+            color: #2D3561;
             font-weight: 600;
         }
     </style>
