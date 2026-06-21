@@ -268,7 +268,7 @@ if (isset($_POST['btn_login'])) {
 
             <div class="left-content">
                 <h1>Welcome to<br>the <span>Admin Panel</span></h1>
-                <p>Manage students, records, enrollment,<br>and more — all in one secure platform.</p>
+                <p>Manage students, records, grades,<br> all in one secure platform.</p>
             </div>
         </div>
 

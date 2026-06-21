@@ -8,13 +8,7 @@ if (!isset($_SESSION['authenticated'])) {
 include 'config.php';
 
 
-$current_month = (int) date('n');
-$current_y     = (int) date('Y');
-if ($current_month >= 6) {
-    $current_year = $current_y . '-' . ($current_y + 1);
-} else {
-    $current_year = ($current_y - 1) . '-' . $current_y;
-}
+$current_year = '2025-2026';
 
 $courses_result = mysqli_query($conn, "SELECT DISTINCT course FROM students ORDER BY course");
 $all_courses = [];

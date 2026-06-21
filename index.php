@@ -27,6 +27,23 @@ if (isset($_POST['save'])) {
     exit();
 }
 
+if (isset($_POST['bulk_delete'])) {
+    $ids = isset($_POST['selected_ids']) && is_array($_POST['selected_ids']) ? $_POST['selected_ids'] : [];
+    $ids = array_filter(array_map('intval', $ids), function ($id) {
+        return $id > 0;
+    });
+
+    $deleted_count = 0;
+    if (!empty($ids)) {
+        $id_list = implode(',', $ids);
+        mysqli_query($conn, "DELETE FROM students WHERE id IN ($id_list)");
+        $deleted_count = count($ids);
+    }
+
+    header("Location: index.php?status=bulk_deleted&count=$deleted_count");
+    exit();
+}
+
 // Pagination setup
 $limit = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
@@ -130,6 +147,17 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
         </div>
     <?php endif; ?>
 
+    <?php if (isset($_GET['status']) && $_GET['status'] == 'bulk_deleted'): ?>
+        <?php $deleted_count = isset($_GET['count']) ? (int) $_GET['count'] : 0; ?>
+        <div class="alert-status alert-success" id="saveAlert">
+            <i class="ti ti-circle-check"></i>
+            <span><?php echo $deleted_count; ?> student<?php echo $deleted_count === 1 ? '' : 's'; ?> deleted successfully.</span>
+            <button type="button" class="alert-dismiss" aria-label="Dismiss" onclick="document.getElementById('saveAlert').remove();">
+                <i class="ti ti-x"></i>
+            </button>
+        </div>
+    <?php endif; ?>
+
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="navbar-left">
@@ -225,42 +253,58 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
         <div class="table-card">
             <div class="table-card-header">
                 <h3 class="table-title">Students</h3>
-                <a href="add.php" class="btn-add"><i class="ti ti-plus"></i> Add Student</a>
+                <div class="header-actions">
+                    <button type="button" id="toggleBulkSelect" class="btn-bulk-toggle">
+                        <i class="ti ti-checkbox"></i> Bulk Delete
+                    </button>
+                    <a href="add.php" class="btn-add"><i class="ti ti-plus"></i> Add Student</a>
+                </div>
             </div>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Student ID</th>
-                            <th>Name</th>
-                            <th>Course</th>
-                            <th>Section</th>
-                            <th>Year</th>
-                            <th>Gender</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentTableBody">
-                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <form method="POST" action="index.php" id="bulkDeleteForm">
+                <div class="bulk-actions-bar" id="bulkActionsBar" hidden>
+                    <span id="selectedCount">0 selected</span>
+                    <button type="submit" name="bulk_delete" class="btn-bulk-delete" id="bulkDeleteBtn">
+                        <i class="ti ti-trash"></i> Delete Selected
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
                             <tr>
-                                <td><strong><?php echo htmlspecialchars($row['student_id']); ?></strong></td>
-                                <td><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
-                                <td><?php echo htmlspecialchars($row['course']); ?></td>
-                                <td><?php echo htmlspecialchars($row['section']); ?></td>
-                                <td><?php echo htmlspecialchars($row['year_level']); ?></td>
-                                <td><?php echo htmlspecialchars($row['gender']); ?></td>
-                                <td class="actions-cell">
-                                    <a class="action-link edit-lnk" href="edit.php?id=<?php echo $row['id']; ?>">Edit</a>
-                                    <span class="action-sep">|</span>
-                                    <a class="action-link del-lnk" href="delete.php?id=<?php echo $row['id']; ?>"
-                                        onclick="return confirm('Are you sure you want to delete this student?')">Delete</a>
-                                </td>
+                                <th class="checkbox-col"><input type="checkbox" id="selectAll" aria-label="Select all students"></th>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Course</th>
+                                <th>Section</th>
+                                <th>Year</th>
+                                <th>Gender</th>
+                                <th>Actions</th>
                             </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                <tr>
+                                    <td class="checkbox-col"><input type="checkbox" class="row-checkbox" name="selected_ids[]" value="<?php echo $row['id']; ?>" aria-label="Select <?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?>"></td>
+                                    <td><strong><?php echo htmlspecialchars($row['student_id']); ?></strong></td>
+                                    <td><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['course']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['section']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['year_level']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['gender']); ?></td>
+                                    <td class="actions-cell">
+                                        <a class="action-link edit-lnk" href="edit.php?id=<?php echo $row['id']; ?>">Edit</a>
+                                        <span class="action-sep">|</span>
+                                        <a class="action-link del-lnk" href="delete.php?id=<?php echo $row['id']; ?>"
+                                            onclick="return confirm('Are you sure you want to delete this student?')">Delete</a>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
 
             <!-- Pagination -->
             <?php if ($total_pages > 1): ?>
