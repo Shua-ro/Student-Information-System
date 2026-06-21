@@ -133,6 +133,7 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
     <script src="search.js" defer></script>
     <script src="navbar.js" defer></script>
     <script src="alert-toast.js" defer></script>
+    <script src="delete-modal.js" defer></script>
 </head>
 
 <body>
@@ -141,6 +142,16 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
         <div class="alert-status alert-success" id="saveAlert">
             <i class="ti ti-circle-check"></i>
             <span>Student added successfully.</span>
+            <button type="button" class="alert-dismiss" aria-label="Dismiss" onclick="document.getElementById('saveAlert').remove();">
+                <i class="ti ti-x"></i>
+            </button>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['status']) && $_GET['status'] == 'deleted'): ?>
+        <div class="alert-status alert-error" id="saveAlert">
+            <i class="ti ti-circle-check"></i>
+            <span>Student deleted successfully.</span>
             <button type="button" class="alert-dismiss" aria-label="Dismiss" onclick="document.getElementById('saveAlert').remove();">
                 <i class="ti ti-x"></i>
             </button>
@@ -291,7 +302,7 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
                                         <a class="action-link edit-lnk" href="edit.php?id=<?php echo $row['id']; ?>">Edit</a>
                                         <span class="action-sep">|</span>
                                         <a class="action-link del-lnk" href="delete.php?id=<?php echo $row['id']; ?>"
-                                            onclick="return confirm('Are you sure you want to delete this student?')">Delete</a>
+                                            data-name="<?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?>">Delete</a>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
@@ -343,6 +354,22 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
     <footer class="site-footer">
         <p>© 2026 <strong>SIS Portal</strong> &nbsp;·&nbsp; All rights reserved</p>
     </footer>
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModalOverlay" hidden>
+        <div class="modal-box" role="alertdialog" aria-modal="true" aria-labelledby="deleteModalTitle" aria-describedby="deleteModalDesc">
+            <div class="modal-icon">
+                <i class="ti ti-trash"></i>
+            </div>
+            <h3 class="modal-title" id="deleteModalTitle">Delete student record?</h3>
+            <p class="modal-desc" id="deleteModalDesc">
+                Are you sure you want to delete <strong id="deleteModalName">this student</strong>? This action cannot be undone.
+            </p>
+            <div class="modal-actions">
+                <button type="button" class="modal-btn modal-btn-cancel" id="deleteModalCancel">Cancel</button>
+                <a href="#" class="modal-btn modal-btn-danger" id="deleteModalConfirm">Delete</a>
+            </div>
+        </div>
+    </div>
 
 </body>
 
