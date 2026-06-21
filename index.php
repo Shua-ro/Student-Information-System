@@ -197,12 +197,6 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
                 <?php if ($year_filter): ?><input type="hidden" name="year" value="<?php echo htmlspecialchars($year_filter); ?>"><?php endif; ?>
                 <?php if ($gender_filter): ?><input type="hidden" name="gender" value="<?php echo htmlspecialchars($gender_filter); ?>"><?php endif; ?>
             </form>
-            <?php if ($search_filter): ?>
-                <div class="active-search-note">
-                    Searching for "<?php echo htmlspecialchars($search_filter); ?>" —
-                    <a href="index.php<?php echo $other_filters_param ? '?' . ltrim($other_filters_param, '&') : ''; ?>">Clear search</a>
-                </div>
-            <?php endif; ?>
             <span class="filter-label">Filter</span>
             <div class="filter-pills">
                 <select class="filter-pill"
