@@ -267,6 +267,7 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
             </div>
 
             <form method="POST" action="index.php" id="bulkDeleteForm">
+                <input type="hidden" name="bulk_delete" value="1">
                 <div class="bulk-actions-bar" id="bulkActionsBar" hidden>
                     <span id="selectedCount">0 selected</span>
                     <button type="submit" name="bulk_delete" class="btn-bulk-delete" id="bulkDeleteBtn">
@@ -361,12 +362,10 @@ while ($row3 = mysqli_fetch_assoc($sections_result3)) {
                 <i class="ti ti-trash"></i>
             </div>
             <h3 class="modal-title" id="deleteModalTitle">Delete student record?</h3>
-            <p class="modal-desc" id="deleteModalDesc">
-                Are you sure you want to delete <strong id="deleteModalName">this student</strong>? This action cannot be undone.
-            </p>
+            <p class="modal-desc" id="deleteModalDesc"></p>
             <div class="modal-actions">
                 <button type="button" class="modal-btn modal-btn-cancel" id="deleteModalCancel">Cancel</button>
-                <a href="#" class="modal-btn modal-btn-danger" id="deleteModalConfirm">Delete</a>
+                <button type="button" class="modal-btn modal-btn-danger" id="deleteModalConfirm">Delete</button>
             </div>
         </div>
     </div>
