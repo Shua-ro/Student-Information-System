@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['authenticated'])) {
+    header("Location: login.php");
+    exit();
+}
+
 include 'config.php';
 
 if (isset($_GET['id'])) {
