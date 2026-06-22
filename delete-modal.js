@@ -9,8 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let pendingAction = null;
 
-    // Builds the description from plain text nodes (no innerHTML) so a
-    // student's name can never be interpreted as markup.
+
     function setDescription(leadText, subject, trailText) {
         descEl.textContent = '';
         descEl.append(leadText + ' ');
@@ -49,15 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Bulk delete button.
-    // Caught at the document level in the CAPTURING phase, which always
-    // runs before any listener attached directly to the button itself
-    // (e.g. a leftover native confirm() in script.js) — so that other
-    // handler never gets a chance to fire. On confirm, the form is
-    // submitted via the native .submit() method, which does NOT dispatch
-    // a 'submit' event, so no other submit listener can intercept it
-    // either. The hidden bulk_delete field (see index.php) keeps the
-    // server-side check working since no real click occurs.
     const bulkForm = document.getElementById('bulkDeleteForm');
     const bulkBtn = document.getElementById('bulkDeleteBtn');
 
